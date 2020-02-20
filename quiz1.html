@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Quiz</title>
+
+    <!-- Added link to the jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Added a link to our external stylesheet-->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- Jumbotron for Title -->
+<div class="jumbotron">
+    <h1 class="text-center">Javascript Quiz with Timer</h1>
+    <h3 class="text-center">Pick the Correct Answer</h3>
+    <h3 class="text-center">Correct Answer gets 20 points and Wrong Answer gets Negative 15 points</h3>
+    <h3 class="text-center">Good Luck</h3>
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+      <!-- Calculator Card -->
+      <div class="col-md-6">
+        <div class="card">
+          <h3 class="card-header">Questions</h3>
+
+          <div class="card-body">
+            <button id="button-q" class="btn btn-dark number" value="0"><span></span></button> <br>
+            <button id="button-1" class="btn btn-primary number" value="1"><span></span></button> <br>
+            <button id="button-2" class="btn btn-primary number" value="2"><span></span></button> <br>
+            <button id="button-3" class="btn btn-primary number" value="3"><span></span></button> <br>
+            <button id="button-4" class="btn btn-primary number" value="4"><span></span></button>
+            <br><br>
+
+            <button id="button-clear" class="btn btn-dark clear" value="clear"><span></span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="col-lg-6">
+        <div class="card">
+          <h3 class="card-header">Result</h3>
+          <div class="card-body">
+            <h1 id="first-number"></h1>
+            <h1 id="operator"></h1>
+            <h1 id="second-number"></h1>
+            <hr>
+            <h1 id="result"></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+//
+var bqText = document.querySelector("#button-q");
+var b1Text = document.querySelector("#button-1");
+var b2Text = document.querySelector("#button-2");
+var b3Text = document.querySelector("#button-3");
+var b4Text = document.querySelector("#button-4");
+//
+bqText.textContent = "Question 1";
+b1Text.textContent = "Option 1";
+b2Text.textContent = "Option 2";
+b3Text.textContent = "Option 3";
+b4Text.textContent = "Option 4";
+//
+var op1Text = document.querySelector("#first-number");
+var operatorText = document.querySelector("#operator");
+var op2Text = document.querySelector("#second-number");
+var resultText = document.querySelector("#result");
+//
+$(document).ready(function() {
+var operand1 = []; // first number array - a string
+var intoperand1 = -1; // string converted to integer for arithmatic
+var operand2 = []; // second number array - a string
+var intoperand2 = -1; // string converted to integer for arithmatic
+var operator = 0; // operator code 1-plus, 2-minus, 3-times, 4-divide, 5-power
+var operatorYes = false; // variable that tracks if the operator has been chosen - yes or no
+var operand1Yes = false;
+var operand2Yes = false;
+var operatorArr = ["plus", "minus", "times", "divide", "power"];
+var operatorArr2 = ["+", "-", "*", "/", "^"];
+
+// Your code here...
+
+$(".number").on("click", function() {
+  console.log(" first operand chosen? = " + operand1Yes);
+  if (!operand1Yes) { // if operator has not been selected yet, then we are working on the first operand
+  operand1 = operand1 + this.value; // get the value of the button-0 thru 9 and concatenate to previous value
+  op1Text.textContent = operand1; // set text content to the operator value
+  intoperand1 = parseInt(operand1); // convert the string to integer - ready for operations
+  console.log(Number.isInteger(intoperand1) + " operand1 " + intoperand1); // just make sure that it is an integer
+  } else if (!operand2Yes) {
+  operand2 = operand2 + this.value; // get the value of the button-0 thru 9 and concatenate to previous value
+  op2Text.textContent = operand2; // set text content to the operator value
+  intoperand2 = parseInt(operand2); // convert the string to integer - ready for operations
+  console.log(Number.isInteger(intoperand2) + " operand2 " + intoperand2); // just make sure that it is an integer 
+  }
+});
+
+$(".operator").on("click", function() {
+  console.log(" clicking a operator " + operand1Yes);
+  if (intoperand1 > 0) { // check if the first operator is ready
+    operator = operatorArr.indexOf(this.value) + 1; // value = plus, minus, times, divide, power
+    operatorType = operator;
+    operatorText.textContent = operatorArr2[operator-1]; // set text content to the operator value
+    console.log(operatorArr2[operator-1] + " operator " + operator + " " + operatorType);
+    operand1Yes = true;
+  } else {
+    alert("Please enter the first operand");
+    var operator = 0;
+  }
+});
+
+$(".clear").on("click", function() {
+  $("#first-number").empty();
+  $("#operator").empty();
+  $("#second-number").empty();
+  $("#result").empty();
+  operand1 = []; // first number array - a string
+  intoperand1 = -1; // string converted to integer for arithmatic
+  operand2 = []; // second number array - a string
+  intoperand2 = -1; // string converted to integer for arithmatic
+  operator = 0; // operator code 1-plus, 2-minus, 3-times, 4-divide, 5-power
+  operatorYes = false; // variable that tracks if the operator has been chosen - yes or no
+  operand1Yes = false;
+  operand2Yes = false;
+});
+
+$(".equal").on("click", function() {
+  console.log(" clicking equals " + operatorType);
+  if (operatorType == 1) {
+    resultText.textContent = intoperand1 + intoperand2;
+  } else if (operatorType == 2) {
+    resultText.textContent = intoperand1 - intoperand2;
+  } else if (operatorType == 3) {
+    resultText.textContent = intoperand1 * intoperand2;
+  } else if (operatorType == 4) {
+    resultText.textContent = intoperand1 / intoperand2;
+  } else if (operatorType == 5) {
+    resultText.textContent = Math.pow(intoperand1, intoperand2);
+  }
+  
+});
+
+
+});
+
+</script>
+
+</body>
+</html>
