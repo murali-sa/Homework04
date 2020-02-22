@@ -15,15 +15,55 @@
 
 </head>
 <body>
-
+  <!-- data begin -->
+  <script>
+  // myQuestions = JSON Object
+  // scheme
+  // -- question: string
+  // -- options: array of string
+  // -- number (refers to index of options)
+  //
+  var data = 
+  {
+    "myQuestions": [
+      {
+      "question": "Who invented JavaScript?",
+      "options": ["Bjarne Stroustrup", "Lisoarry Elln", "Brendan Eich","James Gosling"],
+      "answer": "2"},
+      {
+      "question": "Which one is the core technology of World Wide Web?",
+      "options": ["HTML", "CSS", "Javascript", "All of the above"],
+      "answer": "3"
+      },
+      {
+      "question": "Which one is the core technology of World Wide Web?",
+      "options": ["HTML", "CSS", "Javascript", "All of the above"],
+      "answer": "3"
+      },
+      {
+      "question": "Who invented JavaScript?",
+      "options": ["Bjarne Stroustrup", "Larry Ellison", "Brendan Eich","James Gosling"],
+      "answer": "2"
+      }
+    ]
+  }
+  console.log(data.myQuestions);
+  console.log(data.myQuestions[0].question);
+  console.log(data.myQuestions[0].options);
+  console.log(data.myQuestions[0].answer);
+</script>
+<!-- data end -->
+<!---->
 <!-- Jumbotron for Title -->
+<!-- -->
 <div class="jumbotron">
     <h1 class="text-center">Javascript Quiz with Timer</h1>
     <h3 class="text-center">Pick the Correct Answer</h3>
     <h3 class="text-center">Correct Answer gets 20 points and Wrong Answer gets Negative 15 points</h3>
     <h3 class="text-center">Good Luck</h3>
 </div>
-
+<!-- Jumbotron end -->
+<!-- -->
 <div class="container">
 
     <div class="row">
@@ -34,14 +74,14 @@
           <h3 class="card-header">Questions</h3>
 
           <div class="card-body">
-            <button id="button-q" class="btn btn-dark number" value="0"><span></span></button> <br>
-            <button id="button-1" class="btn btn-primary number" value="1"><span></span></button> <br>
-            <button id="button-2" class="btn btn-primary number" value="2"><span></span></button> <br>
-            <button id="button-3" class="btn btn-primary number" value="3"><span></span></button> <br>
-            <button id="button-4" class="btn btn-primary number" value="4"><span></span></button>
+            <p id="question" class="btn btn-dark" value="0"><span></span></p> <br>
+            <button id="button-0" class="btn btn-primary number" value="0"><span></span></button> <br><br>
+            <button id="button-1" class="btn btn-primary number" value="1"><span></span></button> <br><br>
+            <button id="button-2" class="btn btn-primary number" value="2"><span></span></button> <br><br>
+            <button id="button-3" class="btn btn-primary number" value="3"><span></span></button>
             <br><br>
 
-            <button id="button-clear" class="btn btn-dark clear" value="clear"><span></span></button>
+            <button id="button-response" class="btn btn-dark clear"><span></span></button>
           </div>
         </div>
       </div>
@@ -60,22 +100,49 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <script type="text/javascript">
 //
-var bqText = document.querySelector("#button-q");
-var b1Text = document.querySelector("#button-1");
-var b2Text = document.querySelector("#button-2");
-var b3Text = document.querySelector("#button-3");
-var b4Text = document.querySelector("#button-4");
+var bqText = document.querySelector("#question");
+var b1Text = document.querySelector("#button-0");
+var b2Text = document.querySelector("#button-1");
+var b3Text = document.querySelector("#button-2");
+var b4Text = document.querySelector("#button-3");
+var bresText = document.querySelector("#button-response");
 //
-bqText.textContent = "Question 1";
-b1Text.textContent = "Option 1";
-b2Text.textContent = "Option 2";
-b3Text.textContent = "Option 3";
-b4Text.textContent = "Option 4";
+// for each question in the "myQuestions object array"
+// 
+// totalPoints = 0;
+// currentTimer = 0;
+// ansResponse = "               ";
+var totalPoints = 0;
+var currentTimer = 0;
+var ansResponse = "-                       -";
+var qIndex = 0;
 //
+console.log("Number of Questions = " + data.myQuestions.length);
+for (var i in data.myQuestions) {
+  // list each question
+  bqText.textContent = data.myQuestions[i].question;
+  // list of options for the question
+  b1Text.textContent = data.myQuestions[i].options[0];
+  b2Text.textContent = data.myQuestions[i].options[1];
+  b3Text.textContent = data.myQuestions[i].options[2];
+  b4Text.textContent = data.myQuestions[i].options[3];
+  bresText.textContent = ansResponse;
+  var returnValue = functionCheck(i);
+  console.log("returned value = " + returnValue);
+}
+//
+function functionCheck (index) {
+$(".number").on("click", function() {
+  console.log(" first option chosen?" + this.value + data.myQuestions[index].answer);
+  if (data.myQuestions[index].answer = this.value) {
+    return 20;
+  }
+});
+}
 var op1Text = document.querySelector("#first-number");
 var operatorText = document.querySelector("#operator");
 var op2Text = document.querySelector("#second-number");
@@ -94,21 +161,6 @@ var operatorArr = ["plus", "minus", "times", "divide", "power"];
 var operatorArr2 = ["+", "-", "*", "/", "^"];
 
 // Your code here...
-
-$(".number").on("click", function() {
-  console.log(" first operand chosen? = " + operand1Yes);
-  if (!operand1Yes) { // if operator has not been selected yet, then we are working on the first operand
-  operand1 = operand1 + this.value; // get the value of the button-0 thru 9 and concatenate to previous value
-  op1Text.textContent = operand1; // set text content to the operator value
-  intoperand1 = parseInt(operand1); // convert the string to integer - ready for operations
-  console.log(Number.isInteger(intoperand1) + " operand1 " + intoperand1); // just make sure that it is an integer
-  } else if (!operand2Yes) {
-  operand2 = operand2 + this.value; // get the value of the button-0 thru 9 and concatenate to previous value
-  op2Text.textContent = operand2; // set text content to the operator value
-  intoperand2 = parseInt(operand2); // convert the string to integer - ready for operations
-  console.log(Number.isInteger(intoperand2) + " operand2 " + intoperand2); // just make sure that it is an integer 
-  }
-});
 
 $(".operator").on("click", function() {
   console.log(" clicking a operator " + operand1Yes);
