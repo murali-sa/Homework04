@@ -1,67 +1,139 @@
-var quizResult = document.getElementById("results");
-// 
-// button selections
 //
-var eQ = document.getElementById("quiz");
-var eS1 = document.getElementById("selection1");
-var eS2 = document.getElementById("selection2");
-var eS3 = document.getElementById("selection3");
-var eS4 = document.getElementById("selection4");
+// function - Quiz
 //
-var sSelectionl = document.querySelector("#selection1");
-var sSelection2 = document.querySelector("#selection2");
-var sSelection3 = document.querySelector("#selection3");
-var sSelection4 = document.querySelector("#selection4");
-//
-// object: question and answer list with correct answer
-//
-const myQuestions = [
-  {
-    question: "Who invented JavaScript?",
-    answer1: "Bjarne Stroustrup",
-    answer2: "Larry Ellison",
-    answer3: "Brendan Eich",
-    answer4: "James Gosling",
-    correctAnswer: "Brendan Eich"
-  },
-  {
-    question: "Which one is the core technology of World Wide Web?",
-    answer1: "HTML",
-    answer2: "CSS",
-    answer3: "Javascript",
-    answer4: "All of the above",
-    correctAnswer: "All of the above"
-  }
-];
-console.log(myQuestions);
-//
-// Loop thru questions
-// 
-for (var i = 0; i<myQuestions.length; i++) {
-  eQ.textContent = myQuestions[i].question;
-  eS1.textContent = myQuestions[i].answer1;
-  eS2.textContent = myQuestions[i].answer2;
-  eS3.textContent = myQuestions[i].answer3;
-  eS4.textContent = myQuestions[i].answer4;
-//
-  console.log("Question: " + eQ.textContent);
-  console.log("1st option: " + eS1.textContent);
-  console.log("2st option: " + eS2.textContent);
-  console.log("3st option: " + eS3.textContent);
-  console.log("4st option: " + eS4.textContent);
-//
-// add timer
-//
-sSelectionl.addEventListener("click", function() {
-  console.log("first choice selected ")
-});
-sSelection2.addEventListener("click", function() {
-  console.log("second choice selected")
-});
-sSelection3.addEventListener("click", function() {
-  console.log("third choice selected")
-});
-sSelection4.addEventListener("click", function() {
-  console.log("fourth choice selected")
-});
+function Quiz(questions) {
+    this.score = 0;
+    this.questions = questions;
+    this.questionIndex = 0;
 }
+//
+// function - Quiz - end
+// 
+//
+// set question index
+//
+Quiz.prototype.getQuestionIndex = function() {
+    return this.questions[this.questionIndex];
+}
+console.log(Quiz);
+//
+//
+Quiz.prototype.guess = function(answer) {
+    if(this.getQuestionIndex().isCorrectAnswer(answer)) {
+//        this.score++;
+          this.score = this.score + 20; 
+    } else {
+          this.score = this.score - 10;
+    }
+    this.questionIndex++;
+    console.log(this.questionIndex);
+}
+
+//
+//
+Quiz.prototype.isEnded = function() {
+    return this.questionIndex === this.questions.length;
+}
+//
+// 
+function Question(text, choices, answer) {
+    this.text = text;
+    this.choices = choices;
+    this.answer = answer;
+}
+//
+// 
+Question.prototype.isCorrectAnswer = function(choice) {
+    return this.answer === choice;
+}
+//
+// function populate the questions
+// 
+function populate() {
+    if(quiz.isEnded()) {
+        showScores();
+    }
+    else {
+        // show question
+        var element = document.getElementById("question");
+        element.innerHTML = quiz.getQuestionIndex().text;
+ 
+        // show options
+        var choices = quiz.getQuestionIndex().choices;
+        for(var i = 0; i < choices.length; i++) {
+            var element = document.getElementById("choice" + i);
+            element.innerHTML = choices[i];
+            guess("btn" + i, choices[i]);
+        }
+ 
+        showProgress();
+    }
+};
+//
+// function display timer
+// 
+var remTime = 10;
+var takenTime = 0;
+document.getElementById("timer").innerHTML = "Time Remaining: " + remTime;
+var myTime = setInterval(myTimer, 1000);
+function myTimer() {
+    takenTime = takenTime + 1;
+    remTime = remTime - 1;
+    document.getElementById("timer").innerHTML = "Time Remaining: " + remTime;
+    if(remTime < 1) {
+        clearInterval(myTime);
+        showScores();
+    }
+}
+//
+// function user selection
+// 
+function guess(id, guess) {
+    var button = document.getElementById(id);
+    button.onclick = function() {
+        quiz.guess(guess);
+        populate();
+    }
+};
+//
+// function display quiz progress
+// 
+function showProgress() {
+    var currentQuestionNumber = quiz.questionIndex + 1;
+    var element = document.getElementById("progress");
+    element.innerHTML = "Question " + currentQuestionNumber + " of " + quiz.questions.length;
+        
+    var element = document.getElementById("points");
+    element.innerHTML = "Current Score: " + quiz.score;
+};
+//
+// function display score
+// 
+function showScores() {
+    console.log("this gets called -----");
+    clearInterval(myTime);
+    var gameOverHTML = "<h3>Results</h3>";
+    gameOverHTML += "<h3> Your scores: " + quiz.score + "</h3>";
+    gameOverHTML += "<h3> Time Taken: " + takenTime + "</h3>";
+    var element = document.getElementById("subsection");
+    element.innerHTML = gameOverHTML;
+};
+//
+// list of questions
+//
+var questions = [
+    new Question("Who invented Javascript?", ["Bjarne Stroustrup", "Larry Ellison","Brendan Eich", "James Gosling"], "Brendan Eich"),
+    new Question("Which one is the core technology of World Wide Web?", ["HTML", "Javascript", "CSS", "All of the above"], "All of the above"),
+    new Question("Inside which HTML element do we put the JavaScript?", ["Python Script", "JQuery","Django", "NodeJS"], "Django"),
+    new Question("Which is used for Connect To Database?", ["PHP", "HTML", "JS", "All"], "PHP"),
+    new Question("Inside which HTML element do we put the JavaScript?", ["Python Script", "JQuery","Django", "NodeJS"], "Django"),
+    new Question("Which is used for Connect To Database?", ["PHP", "HTML", "JS", "All"], "PHP")
+];
+// 
+// create quiz
+//
+var quiz = new Quiz(questions);
+//
+// start the process
+//
+populate();
