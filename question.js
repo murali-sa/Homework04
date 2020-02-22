@@ -18,12 +18,14 @@ Quiz.prototype.getQuestionIndex = function() {
 console.log(Quiz);
 //
 //
+var qResponse = "";
 Quiz.prototype.guess = function(answer) {
     if(this.getQuestionIndex().isCorrectAnswer(answer)) {
-//        this.score++;
           this.score = this.score + 20; 
+          document.getElementById("response").innerHTML = "Correct";
     } else {
           this.score = this.score - 10;
+          document.getElementById("response").innerHTML = "Wrong";
     }
     this.questionIndex++;
     console.log(this.questionIndex);
@@ -72,18 +74,22 @@ function populate() {
 //
 // function display timer
 // 
-var remTime = 10;
+var remTime = 20;
 var takenTime = 0;
 document.getElementById("timer").innerHTML = "Time Remaining: " + remTime;
 var myTime = setInterval(myTimer, 1000);
 function myTimer() {
     takenTime = takenTime + 1;
     remTime = remTime - 1;
+    if (remTime <= 5) {
+        document.getElementById("timer").style.color = "red";
+    }
     document.getElementById("timer").innerHTML = "Time Remaining: " + remTime;
     if(remTime < 1) {
         clearInterval(myTime);
         showScores();
     }
+    document.getElementById("response").innerHTML = "";
 }
 //
 // function user selection
@@ -105,6 +111,7 @@ function showProgress() {
         
     var element = document.getElementById("points");
     element.innerHTML = "Current Score: " + quiz.score;
+
 };
 //
 // function display score
